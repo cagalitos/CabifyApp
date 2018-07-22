@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Cabify Shop</title>
+
+    <script src="Scripts/jquery-3.3.1.min.js"></script>
+
+    <script src="Scripts/angular.min.js"></script>
+    <script src="Scripts/angular-route.min.js"></script>
+    <script src="Scripts/angular-resource.min.js"></script>
+
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+
+    <!--FontAwesome-->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+
+
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+
+    <script src="Controllers/ItemsController.js"></script>
+    <script src="Services/ItemsService.js"></script>
+
+    <script src="Controllers/CartController.js"></script>
+    <script src="Services/CartService.js"></script>
+
+
+
+</head>
+<body>
+
+    <header style="background-color: white; height: 50px">
+        <img src="Content/Images/Logo.PNG" width="100" height="50">
+    </header>
+
+    <main ng-app="cabifyShop" style="background-color: #7350ff;">
+        <div class="container-fluid" style="height: {{wHeight}}px">
+            <div class="row">
+                
+                <div ng-controller="ItemsController as vm" class="col col-lg-6 col-md-6" style="margin-top: 5px; margin-bottom: 5px">
+                        <div ng-repeat="x in items" class="card border-dark col-lg-12 col-md-12" style="margin-bottom: 2px">
+                            <div class="card-body">
+                                <h5 class="card-title">Cabify {{x.code}}</h5>
+                                <div class="row">
+                                    <div class="col col col-lg-3 col-md-3">
+                                        <img src="Content/Images/{{x.code}}.PNG" alt="{{x.description}}" width="100" height="100">
+                                    </div>
+                                    <div class="col col col-lg-5 col-md-5">
+                                        <p class="card-text"><b>Description: </b>{{x.description}}</p>
+                                        <p class="card-text"><b>Price: </b>{{x.price}} €</p>
+                                        <button class="btn btn-primary" ng-click="vm.addToCart(x)">Add to cart</button>
+                                    </div>
+                                    <div class="col col col-lg-4 col-md-4" ng-show="{{x.promos != null}}">
+                                        <p class="card-text"><i class="fas fa-certificate" style="color: gold"></i><b>PROMOTION</b></p>
+                                        <p class="card-text"><b>Description: </b>{{x.promos.description}}</p>
+                                        <p class="card-text" ng-show="{{x.promos.isBulk}}"><b>Discounted Price: </b>{{x.promos.newPrice}} €</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <div ng-controller="CartController as vm" class="col col-lg-6 col-md-6" style="margin-top: 5px; margin-bottom: 5px">
+                        <div class="card col-lg-12 col-md-12">
+                            <div class="card-header row">
+                                <span class="col-lg-4 col-md-4"><b>Total: {{cart.finalTotal}} €</b></span>
+                                <span class="col-lg-4 col-md-4"><b>You saved:</b> {{cart.total - cart.finalTotal}} €</span>
+                                <span class="col-lg-4 col-md-4"><button class="btn btn-success btn-sm">Checkout</button></span>
+                            </div>
+                            <ul class="list-group list-group-flush" style="width: auto; height: {{wHeight - 80}}px; overflow-y: scroll">
+                                <li ng-repeat="x in cart.cartItems" class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-lg-10 col-md-10">
+                                            <div class="row">
+                                                <span class="col-lg-4 col-md-4">{{x.code}}</span>
+                                                <span class="col-lg-3 col-md-3"><b>Price: </b>{{x.finalPrice}} €</span>
+                                                <span class="col-lg-3 col-md-3"><b ng-show="x.isPromoted"><strike>{{x.price}} €</strike></b></span>
+                                                <span class="col-lg-2 col-md-2"><span title="{{x.promotionDescription}}" ng-show="x.isPromoted" class="fas fa-certificate" style="cursor: pointer; color: gold"></span></span>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-1 col-md-1">
+                                            <span class="badge badge-pill badge-danger" ng-click="vm.removeFromCart(x)" style="cursor: pointer"><span class="fas fa-times"></span></span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
